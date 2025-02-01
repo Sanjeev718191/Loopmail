@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 // aDjptO4XV1unf5IB
-// sanjeev718191
+// User name - sanjeev718191
 //mongodb+srv://sanjeev718191:aDjptO4XV1unf5IB@test-loop-mail.qzsg3.mongodb.net/?retryWrites=true&w=majority&appName=test-loop-mail
 const connectDB = async () => {
     
