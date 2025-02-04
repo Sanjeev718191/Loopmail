@@ -69,4 +69,57 @@ router.post('/register', async (req, res, next) => {
     
 });
 
+router.post('/login', async(req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    try {
+        let user = await User.findOne({
+            email : email
+        });
+        if(!user){
+            return res.status(400).json({
+                success : false,
+                msg : 'User not exists register to continue.'
+            });
+        }
+        const isMatch = await bcryptjs.compare(password, user.password);
+        if(!isMatch){
+            return res.status(400).json({
+                success : false,
+                msg : 'Invalid password'
+            });
+        } 
+
+        const payload = {
+            user :{
+                id : user.id
+            }
+        }
+
+        jwt.sign(
+            payload, process.env.jwtUserSecret,
+            {
+                expiresIn : 360000
+            }, (err, token) => {
+                if(err) throw err;
+                res.status(200).json({
+                    success : true,
+                    msg:'User logged in',
+                    token : token,
+                    user : user
+                });
+            }
+        )
+
+    } catch(err) {
+        console.log(err.message);
+        res.status(500).json({
+            success : false,
+            msg : 'Server Error'
+        });
+    }
+
+});
+
 module.exports = router;
