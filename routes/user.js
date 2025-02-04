@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const bcryptjs = require('bcryptjs');
+const user_jwt = require('../middleware/user_jwt');
+const jwt = require('jsonwebtoken');
 
 router.post('/register', async (req, res, next) => {
     const { username, email, password} = req.body;
@@ -16,7 +18,6 @@ router.post('/register', async (req, res, next) => {
         }
 
         let user = new User();
-
         user.username = username;
         user.email = email;
 
@@ -28,10 +29,21 @@ router.post('/register', async (req, res, next) => {
 
         await user.save();
 
-        res.json({
-            success : true,
-            message : 'User is registered Successfull',
-            user: user
+        const payload = {
+            user : {
+                id : user.id
+            }
+        }
+
+        jwt.sign(payload, process.env.jwtUserSecret, {
+            expiresIn : 360000
+        }, (err, token) => {
+            if(err) throw err;
+            
+            res.status(200).json({
+                success : true,
+                token : token
+            });
         });
 
     } catch (error) {
