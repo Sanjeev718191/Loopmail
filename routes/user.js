@@ -5,6 +5,23 @@ const bcryptjs = require('bcryptjs');
 const user_jwt = require('../middleware/user_jwt');
 const jwt = require('jsonwebtoken');
 
+router.get('/',user_jwt, async(req, res, next) => {
+    try{ 
+        const user = await User.findById(req.user.id).select('-password');
+        res.status(200).json({
+            success : true,
+            user : user
+        });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            success : false,
+            msg : 'Server Error'
+        });
+        next();
+    }
+});
+
 router.post('/register', async (req, res, next) => {
     const { username, email, password} = req.body;
     
