@@ -3,14 +3,7 @@ const express = require('express');
 const user_jwt = require('../middleware/user_jwt');
 const router = express.Router();
 
-// Sender email credentials
-const sender = { 
-    user: 'sanjeevkumar718191@gmail.com', 
-    pass: 'yqfidqwuzgjuktyv',  
-    recipients: ['sanjeev718191@gmail.com', 'tempmovie08@gmail.com', 'sanjeev19203@gmail.com'],
-};
-
-async function sendEmails() {
+async function sendEmails(sender) {
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
@@ -25,12 +18,12 @@ async function sendEmails() {
         try {
             const info = await transporter.sendMail({
                 from: {
-                    name: 'Sanjeev Kumar',
+                    name: 'Test Kumar',
                     address: sender.user,
                 },
                 to: email,
-                subject: 'Important Update',
-                text: 'Hello,\n\nThis is a simple email with a heading and body.\n\nBest regards,\nSanjeev Kumar',
+                subject: 'Important Update added on GIT',
+                text: 'Hello Git users,\n\nThis is a simple email with a heading and body.\n\nBest regards,\nSanjeev Kumar',
             });
 
             console.log(`Message sent to ${email} from ${sender.user}: ${info.messageId}`);
@@ -41,8 +34,13 @@ async function sendEmails() {
 }
 
 router.post('/sendmail', user_jwt, async (req, res) => {
+    const { user, pass, recipients } = req.body;
+    if (!user || !pass || !recipients || !Array.isArray(recipients)) {
+        return res.status(400).json({ message: 'Invalid request data' });
+    }
+    
     try {
-        await sendEmails();
+        await sendEmails({ user, pass, recipients });
         res.status(200).json({ message: 'Emails sent successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Failed to send emails', error });
