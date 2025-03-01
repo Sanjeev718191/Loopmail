@@ -22,6 +22,7 @@ connectDB();
 app.use(cors());
 app.use('/api/auth', require('./routes/user'));
 app.use('/api', require('./Mailer/SendMail'));
+app.use('/api/task', require('./routes/mailTask'));
 
 
 const PORT = process.env.PORT || 3000;
