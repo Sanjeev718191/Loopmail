@@ -95,12 +95,26 @@ router.post('/register', async (req, res, next) => {
         // ** Send OTP via Email **
         let mailOptions = {
             from: {
-                name: 'no reply Loopmail',
+                name: 'Loopmail',
                 address: process.env.EMAIL_USER,
             },
             to: email,
             subject: 'Your OTP for Registration - Loopmail',
-            text: `Your OTP code is: ${otp}. It is valid for 5 minutes.`,
+            // text: `Your OTP for signup is: ${otp}. It is valid for 5 minutes.`,
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 10px;">
+                    <h2 style="color: #4A90E2;">Welcome to Loopmail!</h2>
+                    <p style="font-size: 16px; color: #333;">Thank you for signing up. Use the OTP below to complete your registration:</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <span style="display: inline-block; background-color: #4A90E2; color: white; padding: 15px 30px; font-size: 24px; font-weight: bold; border-radius: 8px;">
+                            ${otp}
+                        </span>
+                    </div>
+                    <p style="font-size: 14px; color: #777;">This OTP is valid for <strong>5 minutes</strong>. If you didn’t request this, please ignore this email.</p>
+                    <hr style="margin: 30px 0;">
+                    <p style="font-size: 12px; color: #aaa;">Loopmail Team</p>
+                </div>
+            `,
         };
 
         transporter.sendMail(mailOptions, (error, info) => {

@@ -5,12 +5,14 @@ const user_jwt = require('../middleware/user_jwt');
 
 // Create a new task
 router.post('/create', user_jwt, async (req, res) => {
-    const { email_id, email_pass, recipients, mail_body, mail_subject } = req.body;
+    const { email_id, email_pass, sender_name, task_name, recipients, mail_body, mail_subject } = req.body;
 
     try {
         let task = new Task({
             email_id,
             email_pass,
+            sender_name,
+            task_name,
             recipients,
             mail_body,
             mail_subject,

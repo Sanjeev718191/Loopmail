@@ -9,6 +9,14 @@ const taskSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    sender_name: {
+        type: String,
+        required: true
+    },
+    task_name: {
+        type: String,
+        required: true
+    },
     recipients: {
         type: [String],
         required: true
