@@ -20,12 +20,12 @@ async function sendEmails(sender) {
         try {
             const info = await transporter.sendMail({
                 from: {
-                    name: 'Test Kumar',
+                    name: sender.sender_name,
                     address: sender.email_id,
                 },
                 to: email,
                 subject: sender.mail_subject,
-                text: sender.mail_body,
+                html: sender.mail_body,
             });
 
             console.log(`Message sent to ${email} from ${sender.email_id}: ${info.messageId}`);
