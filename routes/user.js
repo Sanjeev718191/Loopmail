@@ -180,6 +180,31 @@ router.post('/verify-otp', async (req, res) => {
     }
 });
 
+router.post('/delete', async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ success: false, msg: 'Email is required' });
+    }
+
+    try {
+        const user = await User.findOneAndDelete({ email });
+
+        if (!user) {
+            return res.status(404).json({ success: false, msg: 'User not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            msg: `User with email ${email} deleted successfully`
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, msg: 'Server Error' });
+    }
+});
+
+
 
 router.post('/login', async(req, res, next) => {
     const email = req.body.email;
