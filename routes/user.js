@@ -21,10 +21,19 @@ const transporter = nodemailer.createTransport({
 router.get('/',user_jwt, async(req, res, next) => {
     try{ 
         const user = await User.findById(req.user.id).select('-password');
-        res.status(200).json({
-            success : true,
-            user : user
-        });
+        if(user != null) {
+            res.status(200).json({
+                success : true,
+                user : user,
+                msg : 'Get user data'
+            });
+        } else {
+            res.status(400).json({
+                success : false,
+                user : user,
+                msg : 'User does not exist.'
+            });
+        }
     } catch (err) {
         console.log(err.message);
         res.status(500).json({
